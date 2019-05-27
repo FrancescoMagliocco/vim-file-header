@@ -1,3 +1,7 @@
+" File:         file_header.vim
+" Last Change:  05/27/2019
+" Maintainer:   FrancescoMagliocco
+
 if exists('g:file_header_enabled') && !g:file_header_enabled
   finish
 endif
@@ -22,7 +26,7 @@ let g:file_header_modified_format   = get(
 " 0 - If text is on line 1, push that text down and insert header
 " 1 - If text is on line 1, put header after that text, i.e line 2
 let g:file_header_insert_mode       = get(g:, 'file_header_insert_mode', 0)
-let g:file_header_expand_str        = get(g:, 'file_header_expand_str', '%:t')
+let g:file_header_expand_str        = get(g:, 'file_header_expand_str', '<afile>:t')
 let g:file_header_author_text       = get(
       \ g:, 'file_header_author_text', 'Maintainer')
 let g:file_header_file_text         = get(g:, 'file_header_file_text', 'File')

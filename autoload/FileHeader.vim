@@ -143,8 +143,6 @@ endfunction
 " FIXME All but the info provided via the g:file_header_extra_info dict will be
 "   updated
 function! FileHeader#UpdateHeader()
-  echomsg s:dict['File']
-  echomsg expand('%:t')
   if !s:HasHeader() || !&modified | return | endif
   
   for l:i in range(1,
@@ -161,14 +159,8 @@ function! FileHeader#UpdateHeader()
           \   . '\|' . g:file_header_last_change_text
           \   . '\|' . g:file_header_author_text . '\)\s*:\s*\(.\+$\)')
     if empty(l:list) | continue | endif
-let l:dict  = 
-      \ {
-      \   'File'        : expand(g:file_header_expand_str),
-      \   'Last Change' : strftime(g:file_header_modified_format),
-      \   'Author'      : g:file_header_author
-      \ }
     if setline(l:i, substitute(
-          \ l:line, l:list[2], l:dict[s:GetSection(l:list[1], 1)[0]], 'g'))
+          \ l:line, l:list[2], s:dict[s:GetSection(l:list[1], 1)[0]], 'g'))
       echohl errorMsg
       echomsg 'Failed to update header!'
       echohl None
