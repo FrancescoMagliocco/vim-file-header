@@ -1,5 +1,5 @@
 " File:         FileHeader.vim
-" Last Change:  05/15/2019
+" Last Change:  05/27/2019
 " Maintainer:   FrancescoMagliocco
 
 if (exists('g:file_header_enabled') && !g:file_header_enabled)
@@ -143,7 +143,10 @@ endfunction
 " FIXME All but the info provided via the g:file_header_extra_info dict will be
 "   updated
 function! FileHeader#UpdateHeader()
+  echomsg s:dict['File']
+  echomsg expand('%:t')
   if !s:HasHeader() || !&modified | return | endif
+  
   for l:i in range(1,
         \ !g:file_header_lines_check
         \   ? line('$')
@@ -154,12 +157,18 @@ function! FileHeader#UpdateHeader()
     let l:line = getline(l:i)
     let l:list = matchlist(
           \ l:line,
-          \ '^.*\(' . g:file_header_file_text
+          \ '^.*\(' . escape(g:file_header_file_text, '.')
           \   . '\|' . g:file_header_last_change_text
           \   . '\|' . g:file_header_author_text . '\)\s*:\s*\(.\+$\)')
     if empty(l:list) | continue | endif
+let l:dict  = 
+      \ {
+      \   'File'        : expand(g:file_header_expand_str),
+      \   'Last Change' : strftime(g:file_header_modified_format),
+      \   'Author'      : g:file_header_author
+      \ }
     if setline(l:i, substitute(
-          \ l:line, l:list[2], s:dict[s:GetSection(l:list[1], 1)[0]], 'g'))
+          \ l:line, l:list[2], l:dict[s:GetSection(l:list[1], 1)[0]], 'g'))
       echohl errorMsg
       echomsg 'Failed to update header!'
       echohl None
